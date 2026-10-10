@@ -1,6 +1,6 @@
 # Clearfolio Resume Parser
 
-Clearfolio is a local-first resume parser with a React frontend and a Python/FastAPI API. It extracts text from PDF and DOCX files, turns recognizable details into structured fields, and saves parsing history in a local SQLite database.
+Clearfolio is a local-first resume parser with a React frontend and a Java/Spring Boot API. It extracts text from PDF and DOCX files, turns recognizable details into structured fields, and saves parsing history in a local SQLite database.
 
 Uploaded documents are processed in memory and are not retained. Resume content is not sent to external AI services. Parsing is heuristic, so review results before using them. This project does not claim GDPR or other regulatory compliance.
 
@@ -10,14 +10,16 @@ Uploaded documents are processed in memory and are not retained. Resume content 
 clearfolio/
 ├── .github/workflows/ci.yml
 ├── backend/
-│   ├── app/
-│   │   ├── api/routes.py
-│   │   ├── database.py
-│   │   ├── main.py
-│   │   └── schemas.py
-│   ├── tests/test_api.py
+│   ├── src/main/java/com/clearfolio/
+│   │   ├── api/
+│   │   ├── config/
+│   │   ├── model/
+│   │   └── service/
+│   ├── src/main/resources/
+│   ├── src/test/java/com/clearfolio/
+│   ├── pom.xml
 │   ├── .env.example
-│   └── requirements.txt
+│   └── ...
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -26,29 +28,26 @@ clearfolio/
 │   │   └── types/
 │   ├── .env.example
 │   └── package.json
-└── week1/day5/resume_parser.py
 ```
 
 ## Prerequisites
 
-- Python 3.11 or later
+- Java 21 or later
+- Maven 3.9 or later
 - Node.js 20.19+ or 22.12+ and npm (required by Vite 7)
 
 ## Setup and run
 
-Run commands from the `clearfolio` directory. Create a Python environment and install the backend:
+Run commands from the `clearfolio` directory. Copy the backend environment example:
 
 ```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r backend\requirements.txt
 Copy-Item backend\.env.example backend\.env
 ```
 
 Start the API in one terminal:
 
 ```powershell
-python -m backend.app.main
+mvn -f backend\pom.xml spring-boot:run
 ```
 
 Start the frontend in another terminal:
@@ -72,7 +71,7 @@ Backend settings are in `backend/.env`:
 | `BACKEND_PORT` | `8000` | API port |
 | `FRONTEND_ORIGIN` | `http://localhost:5173` | The only allowed browser origin |
 | `MAX_UPLOAD_MB` | `10` | Maximum upload size; supported range is 1–100 MB |
-| `DATABASE_PATH` | `backend/data/resume_history.sqlite3` | SQLite database file |
+| `DATABASE_PATH` | `backend/data/resume_history.sqlite3` | SQLite database file (resolved from the backend working directory) |
 
 Frontend settings are in `frontend/.env`:
 
@@ -81,7 +80,7 @@ Frontend settings are in `frontend/.env`:
 | `VITE_API_BASE_URL` | `http://127.0.0.1:8000/api` | API base URL |
 | `VITE_MAX_UPLOAD_MB` | `10` | Client-side limit; keep it in sync with `MAX_UPLOAD_MB` |
 
-The backend creates the database and table on startup. CORS allows only the configured `FRONTEND_ORIGIN`.
+The backend creates the SQLite database and table on startup. CORS allows only the configured `FRONTEND_ORIGIN`.
 
 ## Features
 
@@ -100,14 +99,14 @@ History contains the parsed result, sanitized original filename, and timestamp. 
 From the repository root:
 
 ```powershell
-python -m pytest backend\tests -q
+mvn -f backend\pom.xml verify
 Set-Location frontend
 npm ci
 npm run build
 npm audit
 ```
 
-The backend tests create temporary documents and an isolated temporary database.
+The Spring integration tests create temporary PDF and DOCX documents and use an isolated SQLite database under `backend/target`.
 
 ## API
 
