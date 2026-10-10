@@ -2,7 +2,7 @@ services:
   - type: web
     name: clearfolio-api
     runtime: docker
-    plan: starter
+    plan: free
     dockerfilePath: ./backend/Dockerfile
     dockerContext: .
     healthCheckPath: /api/health
@@ -14,10 +14,14 @@ services:
       - key: MAX_UPLOAD_MB
         value: 10
       - key: DATABASE_PATH
-        value: /var/data/resume_history.sqlite3
+        value: data/resume_history.sqlite3
       - key: FRONTEND_ORIGIN
-        value: http://localhost:5173
-    disk:
-      name: clearfolio-history
-      mountPath: /var/data
-      sizeGB: 1
+        value: https://clearfolio.onrender.com
+  - type: static
+    name: clearfolio
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    rootDir: frontend
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://clearfolio-api.onrender.com/api
