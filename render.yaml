@@ -16,7 +16,7 @@ services:
       - key: DATABASE_PATH
         value: data/resume_history.sqlite3
       - key: FRONTEND_ORIGIN
-        value: https://clearfolio.onrender.com
+        value: https://clearfolio-dih4.onrender.com
   - type: web
     name: clearfolio
     runtime: static
@@ -25,4 +25,4 @@ services:
     rootDir: frontend
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://clearfolio-api.onrender.com/api
+        value: https://clearfolio-api-dih4.onrender.com/api

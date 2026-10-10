@@ -88,7 +88,7 @@ The repository includes a Render Blueprint (`render.yaml`) for the Java API and 
 
 1. Push the repository to GitHub and create a Blueprint on [Render](https://dashboard.render.com/blueprints) using this repository's `render.yaml`.
 2. Review and deploy the two free services. The React app is served as a static site and the Java API runs as a free web service.
-3. Check `https://clearfolio-api.onrender.com/api/health`, then open `https://clearfolio.onrender.com`.
+3. Use the public URLs shown on the Render service pages. The service names can gain a suffix if a name is already in use; update `FRONTEND_ORIGIN` and `VITE_API_BASE_URL` in the Blueprint to match the actual assigned URLs before deploying.
 
 Free Render web services spin down after inactivity and can take about a minute to wake. Their filesystem is ephemeral, so SQLite history can be lost after restarts, spin-downs, or redeploys. Do not use this setup for important or durable resume data. Render may suspend free services when included monthly usage limits are reached.
 
