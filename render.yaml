@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: clearfolio-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: BACKEND_HOST
+        value: 0.0.0.0
+      - key: BACKEND_PORT
+        value: 10000
+      - key: MAX_UPLOAD_MB
+        value: 10
+      - key: DATABASE_PATH
+        value: /var/data/resume_history.sqlite3
+      - key: FRONTEND_ORIGIN
+        value: http://localhost:5173
+    disk:
+      name: clearfolio-history
+      mountPath: /var/data
+      sizeGB: 1

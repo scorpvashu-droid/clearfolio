@@ -82,6 +82,18 @@ Frontend settings are in `frontend/.env`:
 
 The backend creates the SQLite database and table on startup. CORS allows only the configured `FRONTEND_ORIGIN`.
 
+## Deploy (Render + Vercel)
+
+The repository includes a Render Blueprint (`render.yaml`) for the Java API and a Vercel SPA rewrite configuration in `frontend/vercel.json`.
+
+1. Push the repository to GitHub and create a Blueprint on [Render](https://dashboard.render.com/blueprints) using this repository. The backend runs as a Docker service and stores SQLite history on a 1 GB persistent disk mounted at `/var/data`. The Render `starter` service and disk may incur recurring charges; review the plan and billing shown in Render before confirming.
+2. Wait for the API deployment to finish. Copy its actual public URL from Render (for example, `https://clearfolio-api.onrender.com`); check `https://<render-service-url>/api/health`.
+3. Import the same GitHub repository into [Vercel](https://vercel.com/new) and set **Root Directory** to `frontend`. Vercel should detect Vite. Add the build environment variable `VITE_API_BASE_URL` with the value `https://<render-service-url>/api`, then deploy.
+4. Copy the production domain assigned by Vercel. In Render, set `FRONTEND_ORIGIN` to that exact origin, including `https://` and no trailing slash, then redeploy the API. Also replace the initial localhost value for `FRONTEND_ORIGIN` in `render.yaml` with the production domain if you plan to manage future changes through Blueprints.
+5. Open the Vercel production URL and test resume parsing plus history. The Render disk is single-instance storage, so keep the API at one instance; SQLite history persists across restarts and deploys on the attached disk.
+
+Do not use the local `.env` files as production secrets or commit them. `VITE_API_BASE_URL` is a public frontend build setting, not a secret.
+
 ## Features
 
 - PDF and DOCX upload with drag-and-drop, MIME/extension/size checks, and upload progress.
