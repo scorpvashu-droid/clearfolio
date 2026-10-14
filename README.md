@@ -6,6 +6,8 @@ Uploaded documents are processed in memory and are not retained. Resume content 
 
 ## Repository layout
 
+Google drive link-- https://drive.google.com/drive/folders/1DNg4H93_0RB_GrnuFUjE6giCq34_J9B_
+
 ```text
 clearfolio/
 ├── .github/workflows/ci.yml
